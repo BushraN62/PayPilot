@@ -30,12 +30,12 @@ The application will feature a user-friendly desktop interface where users can s
 
 ---
 
-## Data Collection and Storage Plan (Author #1)
+## Data Collection and Storage Plan (Author #1: Zayba Syed)
 
 The application will collect data from the U.S. Department of Education College Scorecard API. Information including college names, tuition costs, graduation rates, student debt, median earnings after graduation, acceptance rates, and degree information will be retrieved through API requests. The data will be stored locally using CSV files or an SQLite database to improve performance and reduce unnecessary API requests.
 
 ---
 
-## Data Analysis and Visualization Plan (Author #2)
+## Data Analysis and Visualization Plan (Author #2: Bushra Naveed)
 
 The collected data will be analyzed using Python and the Pandas library to compare colleges based on earnings, debt, tuition, and graduation rates. An ROI score will be calculated to estimate the financial value of attending each college. The application will generate visualizations such as bar charts, scatter plots, and histograms using Plotly or Matplotlib to help users compare schools and identify trends in salary outcomes and educational costs.
