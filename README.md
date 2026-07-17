@@ -1,6 +1,7 @@
 # Project Title: PayPilot
 
-## Authors: Zayba Syed, Bushra Naveed
+## Authors: 
+Zayba Syed, Bushra Naveed
 
 ---
 
