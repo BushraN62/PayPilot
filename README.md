@@ -2,7 +2,6 @@
 
 ## Authors: 
 Zayba Syed, Bushra Naveed
-
 ---
 
 ## Project Description
