@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+
+{% block title %}PayPilot — Find the Best College Investment{% endblock %}
+
+{% block content %}
+<section class="pp-hero">
+    <div class="container-xl">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7">
+                <p class="pp-eyebrow">Financial outcomes &middot; Data-driven decisions</p>
+                <h1 class="pp-hero-title">
+                    Find the Best<br>
+                    <span class="pp-accent">College Investment</span>
+                </h1>
+                <p class="pp-hero-lead">
+                    PayPilot helps students discover colleges with the strongest return on education.
+                    Filter by earnings, debt, tuition, and major — then compare schools side by side.
+                </p>
+            </div>
+
+            <div class="col-lg-5 d-none d-lg-flex justify-content-end">
+                <div class="pp-hero-visual" aria-hidden="true">
+                    <div class="pp-visual-glow"></div>
+                    <div class="pp-visual-card">
+                        <div class="pp-visual-bar pp-visual-bar-1"></div>
+                        <div class="pp-visual-bar pp-visual-bar-2"></div>
+                        <div class="pp-visual-bar pp-visual-bar-3"></div>
+                        <div class="pp-visual-bar pp-visual-bar-4"></div>
+                    </div>
+                    <p class="pp-visual-caption">Education &rarr; Earnings</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="pp-search-section">
+    <div class="container-xl">
+        <div class="pp-search-card">
+            <div class="pp-search-card-header">
+                <h2 class="pp-search-card-title">
+                    Start your <span class="pp-accent">college search</span>
+                </h2>
+                <p class="pp-search-card-subtitle">
+                    Set your financial and academic preferences to explore high-ROI schools.
+                </p>
+            </div>
+
+            <form action="{{ url_for('results') }}" method="get" class="pp-search-form">
+                <div class="row g-3 g-lg-4">
+                    <div class="col-md-6 col-lg-3">
+                        <label for="state" class="form-label pp-label">State</label>
+                        <select id="state" name="state" class="form-select pp-input">
+                            <option selected>Any State</option>
+                            <option>California</option>
+                            <option>Texas</option>
+                            <option>Florida</option>
+                            <option>New York</option>
+                            <option>Illinois</option>
+                            <option>Washington</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <label for="school_type" class="form-label pp-label">School Type</label>
+                        <select id="school_type" name="school_type" class="form-select pp-input">
+                            <option selected>Any Type</option>
+                            <option>Public</option>
+                            <option>Private Nonprofit</option>
+                            <option>Private For-Profit</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <label for="major" class="form-label pp-label">Major</label>
+                        <select id="major" name="major" class="form-select pp-input">
+                            <option selected>Any Major</option>
+                            <option>Computer Science</option>
+                            <option>Nursing</option>
+                            <option>Business</option>
+                            <option>Engineering</option>
+                            <option>Psychology</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 col-lg-3">
+                        <label for="degree_level" class="form-label pp-label">Degree Level</label>
+                        <select id="degree_level" name="degree_level" class="form-select pp-input">
+                            <option selected>Any Degree</option>
+                            <option>Certificate</option>
+                            <option>Associate</option>
+                            <option>Bachelor's</option>
+                            <option>Master's</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 col-lg-4">
+                        <label for="min_earnings" class="form-label pp-label">Minimum Earnings</label>
+                        <input type="text" id="min_earnings" name="min_earnings"
+                               class="form-control pp-input" placeholder="e.g. 50000">
+                    </div>
+
+                    <div class="col-md-6 col-lg-4">
+                        <label for="max_debt" class="form-label pp-label">Maximum Debt</label>
+                        <input type="text" id="max_debt" name="max_debt"
+                               class="form-control pp-input" placeholder="e.g. 30000">
+                    </div>
+
+                    <div class="col-md-6 col-lg-4">
+                        <label for="max_tuition" class="form-label pp-label">Maximum Tuition</label>
+                        <input type="text" id="max_tuition" name="max_tuition"
+                               class="form-control pp-input" placeholder="e.g. 25000">
+                    </div>
+                </div>
+
+                <div class="pp-search-actions">
+                    <button type="submit" class="btn pp-btn-primary">Search Colleges</button>
+                    <button type="reset" class="btn pp-btn-secondary">Reset</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<section class="pp-popular-section">
+    <div class="container-xl">
+        <h2 class="pp-section-title">Popular Searches</h2>
+        <p class="pp-section-subtitle">Explore common student searches to get started quickly.</p>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <a href="{{ url_for('results') }}" class="pp-popular-card">
+                    <span class="pp-popular-accent"></span>
+                    <h3 class="pp-popular-title">California &mdash; Computer Science</h3>
+                    <p class="pp-popular-detail">Bachelor's &middot; Min earnings $65k &middot; Max debt $30k</p>
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a href="{{ url_for('results') }}" class="pp-popular-card">
+                    <span class="pp-popular-accent pp-popular-accent-alt"></span>
+                    <h3 class="pp-popular-title">Texas &mdash; Nursing</h3>
+                    <p class="pp-popular-detail">Bachelor's &middot; Min earnings $55k &middot; Max tuition $25k</p>
+                </a>
+            </div>
+
+            <div class="col-md-4">
+                <a href="{{ url_for('results') }}" class="pp-popular-card">
+                    <span class="pp-popular-accent pp-popular-accent-green"></span>
+                    <h3 class="pp-popular-title">Florida &mdash; Business</h3>
+                    <p class="pp-popular-detail">Bachelor's &middot; Max debt $28k &middot; Public schools</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

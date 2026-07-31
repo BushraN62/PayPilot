@@ -1,0 +1,576 @@
+/* ==========================================================================
+   PayPilot — Custom Styles
+   Dark theme · Blue accent · Bootstrap 5 overrides
+   ========================================================================== */
+
+:root {
+    --pp-bg:           #0a1628;
+    --pp-bg-elevated:  #0f1f35;
+    --pp-surface:      #132238;
+    --pp-surface-alt:  #182a44;
+    --pp-border:       #243652;
+    --pp-border-soft:  #1c2f4a;
+
+    --pp-accent:       #3b82f6;
+    --pp-accent-hover: #2563eb;
+    --pp-accent-soft:  #1e3a5f;
+    --pp-accent-muted: #60a5fa;
+
+    --pp-text:         #f1f5f9;
+    --pp-text-secondary: #94a3b8;
+    --pp-text-muted:   #64748b;
+
+    --pp-input-bg:     #ffffff;
+    --pp-input-text:   #0f172a;
+    --pp-input-border: #e2e8f0;
+
+    --pp-radius-sm:    10px;
+    --pp-radius-md:    16px;
+    --pp-radius-lg:    20px;
+    --pp-radius-pill:  999px;
+
+    --pp-shadow-card:  0 24px 48px rgba(0, 0, 0, 0.35);
+    --pp-font:         "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body.pp-body {
+    font-family: var(--pp-font);
+    background-color: var(--pp-bg);
+    color: var(--pp-text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+a {
+    text-decoration: none;
+}
+
+.pp-accent {
+    color: var(--pp-accent-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Navigation
+   -------------------------------------------------------------------------- */
+
+.pp-navbar {
+    background-color: rgba(10, 22, 40, 0.92);
+    border-bottom: 1px solid var(--pp-border-soft);
+    padding: 1rem 0;
+    backdrop-filter: blur(8px);
+}
+
+.pp-brand {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--pp-accent-muted) !important;
+    letter-spacing: -0.02em;
+}
+
+.pp-brand:hover {
+    color: var(--pp-accent) !important;
+}
+
+.pp-nav-list {
+    list-style: none;
+    padding: 0;
+}
+
+.pp-nav-link {
+    color: var(--pp-text-secondary) !important;
+    font-size: 0.925rem;
+    padding: 0.25rem 0 !important;
+    transition: color 0.15s ease;
+}
+
+.pp-nav-link:hover {
+    color: var(--pp-text) !important;
+}
+
+.pp-nav-muted {
+    cursor: default;
+}
+
+/* --------------------------------------------------------------------------
+   Hero
+   -------------------------------------------------------------------------- */
+
+.pp-hero {
+    padding: 4.5rem 0 2rem;
+}
+
+.pp-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--pp-accent-muted);
+    margin-bottom: 1.25rem;
+}
+
+.pp-hero-title {
+    font-size: clamp(2.5rem, 5vw, 3.75rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+}
+
+.pp-hero-lead {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--pp-text-secondary);
+    max-width: 36rem;
+    margin-bottom: 0;
+}
+
+/* Hero illustration placeholder */
+.pp-hero-visual {
+    position: relative;
+    width: 280px;
+    height: 220px;
+}
+
+.pp-visual-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 70% 30%, var(--pp-accent-soft) 0%, transparent 70%);
+    border-radius: var(--pp-radius-lg);
+}
+
+.pp-visual-card {
+    position: absolute;
+    bottom: 2rem;
+    left: 1rem;
+    right: 1rem;
+    height: 120px;
+    background: var(--pp-surface);
+    border: 1px solid var(--pp-border);
+    border-radius: var(--pp-radius-md);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+}
+
+.pp-visual-bar {
+    width: 28px;
+    border-radius: 6px 6px 0 0;
+    background: var(--pp-accent-soft);
+}
+
+.pp-visual-bar-1 { height: 40px; }
+.pp-visual-bar-2 { height: 58px; }
+.pp-visual-bar-3 { height: 76px; }
+.pp-visual-bar-4 { height: 96px; background: var(--pp-accent); }
+
+.pp-visual-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--pp-text-muted);
+    margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Search card
+   -------------------------------------------------------------------------- */
+
+.pp-search-section {
+    padding: 1rem 0 3rem;
+}
+
+.pp-search-card {
+    background: var(--pp-surface);
+    border: 1px solid var(--pp-border);
+    border-radius: var(--pp-radius-lg);
+    padding: 2rem 2.25rem;
+    box-shadow: var(--pp-shadow-card);
+}
+
+.pp-search-card-header {
+    margin-bottom: 1.75rem;
+}
+
+.pp-search-card-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+}
+
+.pp-search-card-subtitle {
+    color: var(--pp-text-muted);
+    margin-bottom: 0;
+    font-size: 0.975rem;
+}
+
+.pp-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--pp-text-secondary);
+    margin-bottom: 0.4rem;
+}
+
+/* Light inputs on dark card — inspired by modern search UIs */
+.pp-input.form-control,
+.pp-input.form-select {
+    background-color: var(--pp-input-bg);
+    color: var(--pp-input-text);
+    border: 1px solid var(--pp-input-border);
+    border-radius: var(--pp-radius-sm);
+    padding: 0.7rem 1rem;
+    font-size: 0.95rem;
+    min-height: 48px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pp-input.form-control::placeholder {
+    color: #94a3b8;
+}
+
+.pp-input.form-control:focus,
+.pp-input.form-select:focus {
+    background-color: var(--pp-input-bg);
+    color: var(--pp-input-text);
+    border-color: var(--pp-accent);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+
+.pp-search-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+    padding-top: 0.25rem;
+}
+
+/* --------------------------------------------------------------------------
+   Buttons
+   -------------------------------------------------------------------------- */
+
+.pp-btn-primary {
+    background-color: var(--pp-accent);
+    color: #ffffff;
+    border: none;
+    border-radius: var(--pp-radius-pill);
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.pp-btn-primary:hover {
+    background-color: var(--pp-accent-hover);
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+.pp-btn-secondary {
+    background-color: transparent;
+    color: var(--pp-text);
+    border: 1px solid var(--pp-border);
+    border-radius: var(--pp-radius-pill);
+    padding: 0.75rem 1.75rem;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.pp-btn-secondary:hover {
+    background-color: var(--pp-surface-alt);
+    border-color: var(--pp-text-muted);
+    color: var(--pp-text);
+}
+
+.pp-btn-back {
+    background-color: var(--pp-surface);
+    color: var(--pp-text);
+    border: 1px solid var(--pp-border);
+    border-radius: var(--pp-radius-sm);
+    padding: 0.45rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 1.25rem;
+    display: inline-block;
+    transition: background-color 0.15s ease;
+}
+
+.pp-btn-back:hover {
+    background-color: var(--pp-surface-alt);
+    color: var(--pp-text);
+}
+
+/* --------------------------------------------------------------------------
+   Popular searches
+   -------------------------------------------------------------------------- */
+
+.pp-popular-section {
+    padding: 2rem 0 4.5rem;
+}
+
+.pp-section-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+    letter-spacing: -0.02em;
+}
+
+.pp-section-subtitle {
+    color: var(--pp-text-muted);
+    margin-bottom: 2rem;
+}
+
+.pp-popular-card {
+    display: block;
+    position: relative;
+    background: var(--pp-surface);
+    border: 1px solid var(--pp-border);
+    border-radius: var(--pp-radius-md);
+    padding: 1.5rem 1.5rem 1.5rem 1.75rem;
+    height: 100%;
+    transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+    color: inherit;
+}
+
+.pp-popular-card:hover {
+    border-color: var(--pp-accent-soft);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+    color: inherit;
+}
+
+.pp-popular-accent {
+    position: absolute;
+    left: 0;
+    top: 1.5rem;
+    width: 4px;
+    height: 48px;
+    background: var(--pp-accent);
+    border-radius: 0 4px 4px 0;
+}
+
+.pp-popular-accent-alt {
+    background: var(--pp-accent-muted);
+}
+
+.pp-popular-accent-green {
+    background: #34d399;
+}
+
+.pp-popular-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--pp-text);
+}
+
+.pp-popular-detail {
+    font-size: 0.875rem;
+    color: var(--pp-text-muted);
+    margin-bottom: 0;
+    line-height: 1.5;
+}
+
+/* --------------------------------------------------------------------------
+   Results page
+   -------------------------------------------------------------------------- */
+
+.pp-results-header {
+    padding: 2.5rem 0 1.5rem;
+}
+
+.pp-results-title {
+    font-size: clamp(2rem, 4vw, 2.75rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.5rem;
+}
+
+.pp-results-subtitle {
+    color: var(--pp-text-muted);
+    font-size: 1.05rem;
+    margin-bottom: 1rem;
+    max-width: 40rem;
+}
+
+.pp-results-badge {
+    display: inline-block;
+    background: var(--pp-accent-soft);
+    color: var(--pp-accent-muted);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--pp-radius-sm);
+}
+
+.pp-results-table-section {
+    padding: 0 0 2rem;
+}
+
+.pp-table-card {
+    background: var(--pp-surface);
+    border: 1px solid var(--pp-border);
+    border-radius: var(--pp-radius-md);
+    overflow: hidden;
+}
+
+.pp-table {
+    --bs-table-bg: transparent;
+    --bs-table-color: var(--pp-text);
+    --bs-table-border-color: var(--pp-border-soft);
+    margin-bottom: 0;
+}
+
+.pp-table thead {
+    background-color: var(--pp-bg-elevated);
+}
+
+.pp-table thead th {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--pp-text-secondary);
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--pp-border);
+    white-space: nowrap;
+}
+
+.pp-table tbody td {
+    font-size: 0.925rem;
+    padding: 1rem 1.25rem;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--pp-border-soft);
+    color: var(--pp-text-secondary);
+}
+
+.pp-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.pp-table tbody tr:hover {
+    background-color: rgba(59, 130, 246, 0.06);
+}
+
+.pp-table .pp-college {
+    color: var(--pp-text);
+    font-weight: 500;
+}
+
+.pp-table .pp-roi {
+    color: var(--pp-accent-muted);
+    font-weight: 700;
+    font-size: 1.05rem;
+}
+
+/* --------------------------------------------------------------------------
+   Stat cards
+   -------------------------------------------------------------------------- */
+
+.pp-stats-section {
+    padding: 0 0 4rem;
+}
+
+.pp-stat-card {
+    background: var(--pp-surface);
+    border: 1px solid var(--pp-border);
+    border-radius: var(--pp-radius-md);
+    padding: 1.5rem 1.75rem;
+    height: 100%;
+}
+
+.pp-stat-label {
+    font-size: 0.875rem;
+    color: var(--pp-text-muted);
+    margin-bottom: 0.35rem;
+}
+
+.pp-stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--pp-text);
+    margin-bottom: 0.25rem;
+    letter-spacing: -0.02em;
+}
+
+.pp-stat-hint {
+    font-size: 0.8rem;
+    color: var(--pp-text-muted);
+    margin-bottom: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Footer
+   -------------------------------------------------------------------------- */
+
+.pp-footer {
+    border-top: 1px solid var(--pp-border-soft);
+    padding: 1.25rem 0;
+    margin-top: auto;
+}
+
+.pp-footer-text {
+    font-size: 0.825rem;
+    color: var(--pp-text-muted);
+    text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 767.98px) {
+    .pp-hero {
+        padding: 2.5rem 0 1rem;
+    }
+
+    .pp-search-card {
+        padding: 1.5rem;
+    }
+
+    .pp-search-actions {
+        flex-direction: column;
+    }
+
+    .pp-btn-primary,
+    .pp-btn-secondary {
+        width: 100%;
+        text-align: center;
+    }
+
+    .pp-nav-list {
+        width: 100%;
+        margin-top: 0.75rem;
+        justify-content: flex-start;
+    }
+
+    .pp-table thead th,
+    .pp-table tbody td {
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+    }
+}

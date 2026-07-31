@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}PayPilot — Search Results{% endblock %}
+
+{% block content %}
+<section class="pp-results-header">
+    <div class="container-xl">
+        <a href="{{ url_for('home') }}" class="btn pp-btn-back">&larr; Back</a>
+
+        <h1 class="pp-results-title">Search Results</h1>
+        <p class="pp-results-subtitle">
+            Compare colleges based on tuition, salary, debt, and graduation outcomes.
+        </p>
+        <span class="pp-results-badge">8 schools</span>
+    </div>
+</section>
+
+<section class="pp-results-table-section">
+    <div class="container-xl">
+        <div class="pp-table-card">
+            <div class="table-responsive">
+                <table class="table pp-table mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col">College</th>
+                            <th scope="col">State</th>
+                            <th scope="col">Tuition</th>
+                            <th scope="col">Median Earnings</th>
+                            <th scope="col">Student Debt</th>
+                            <th scope="col">Graduation Rate</th>
+                            <th scope="col">Acceptance Rate</th>
+                            <th scope="col">ROI Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="pp-college">Summit State University</td>
+                            <td>CA</td>
+                            <td>$14,200</td>
+                            <td>$78,500</td>
+                            <td>$18,400</td>
+                            <td>82%</td>
+                            <td>48%</td>
+                            <td class="pp-roi">91</td>
+                        </tr>
+                        <tr>
+                            <td class="pp-college">Lakeside Institute of Tech</td>
+                            <td>TX</td>
+                            <td>$11,800</td>
+                            <td>$72,100</td>
+                            <td>$16,200</td>
+                            <td>76%</td>
+                            <td>55%</td>
+                            <td class="pp-roi">88</td>
+                        </tr>
+                        <tr>
+                            <td class="pp-college">Harborview College</td>
+                            <td>FL</td>
+                            <td>$9,650</td>
+                            <td>$64,300</td>
+                            <td>$14,800</td>
+                            <td>71%</td>
+                            <td>62%</td>
+                            <td class="pp-roi">84</td>
+                        </tr>
+                        <tr>
+                            <td class="pp-college">Northbridge University</td>
+                            <td>NY</td>
+                            <td>$22,400</td>
+                            <td>$81,200</td>
+                            <td>$24,100</td>
+                            <td>85%</td>
+                            <td>32%</td>
+                            <td class="pp-roi">79</td>
+                        </tr>
+                        <tr>
+                            <td class="pp-college">Prairie Crest College</td>
+                            <td>IL</td>
+                            <td>$12,900</td>
+                            <td>$68,750</td>
+                            <td>$17,600</td>
+                            <td>74%</td>
+                            <td>58%</td>
+                            <td class="pp-roi">86</td>
+                        </tr>
+                        <tr>
+                            <td class="pp-college">Cedar Ridge University</td>
+                            <td>WA</td>
+                            <td>$15,100</td>
+                            <td>$75,900</td>
+                            <td>$19,200</td>
+                            <td>80%</td>
+                            <td>44%</td>
+                            <td class="pp-roi">87</td>
+                        </tr>
+                        <tr>
+                            <td class="pp-college">Silver Oak State</td>
+                            <td>AZ</td>
+                            <td>$10,400</td>
+                            <td>$61,800</td>
+                            <td>$13,500</td>
+                            <td>69%</td>
+                            <td>67%</td>
+                            <td class="pp-roi">83</td>
+                        </tr>
+                        <tr>
+                            <td class="pp-college">Elm &amp; Market College</td>
+                            <td>MA</td>
+                            <td>$28,600</td>
+                            <td>$89,400</td>
+                            <td>$27,800</td>
+                            <td>88%</td>
+                            <td>28%</td>
+                            <td class="pp-roi">81</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="pp-stats-section">
+    <div class="container-xl">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="pp-stat-card">
+                    <p class="pp-stat-label">Average Tuition</p>
+                    <p class="pp-stat-value">$15,630</p>
+                    <p class="pp-stat-hint">Across displayed results</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="pp-stat-card">
+                    <p class="pp-stat-label">Average Earnings</p>
+                    <p class="pp-stat-value">$74,000</p>
+                    <p class="pp-stat-hint">Median mid-career estimate</p>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="pp-stat-card">
+                    <p class="pp-stat-label">Average Debt</p>
+                    <p class="pp-stat-value">$18,950</p>
+                    <p class="pp-stat-hint">Typical graduate loan load</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
