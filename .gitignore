@@ -7,3 +7,8 @@ env/
 .vscode/
 .idea/
 *.sqlite3
+
+# Generated college data cache
+data/colleges.csv
+data/programs.csv
+data/college_results.csv

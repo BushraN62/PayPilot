@@ -1,152 +1,668 @@
 {% extends "base.html" %}
 
+
+
 {% block title %}PayPilot — Search Results{% endblock %}
 
+
+
 {% block content %}
+
 <section class="pp-results-header">
+
     <div class="container-xl">
+
         <a href="{{ url_for('home') }}" class="btn pp-btn-back">&larr; Back</a>
 
+
+
         <h1 class="pp-results-title">Search Results</h1>
+
         <p class="pp-results-subtitle">
+
             Compare colleges based on tuition, salary, debt, and graduation outcomes.
+
         </p>
-        <span class="pp-results-badge">8 schools</span>
+
+        <span id="results-count" class="pp-results-badge">
+
+            {{ colleges|length }} Schools Found
+
+        </span>
+
     </div>
+
 </section>
+
+
 
 <section class="pp-results-table-section">
+
     <div class="container-xl">
-        <div class="pp-table-card">
-            <div class="table-responsive">
-                <table class="table pp-table mb-0">
-                    <thead>
-                        <tr>
-                            <th scope="col">College</th>
-                            <th scope="col">State</th>
-                            <th scope="col">Tuition</th>
-                            <th scope="col">Median Earnings</th>
-                            <th scope="col">Student Debt</th>
-                            <th scope="col">Graduation Rate</th>
-                            <th scope="col">Acceptance Rate</th>
-                            <th scope="col">ROI Score</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="pp-college">Summit State University</td>
-                            <td>CA</td>
-                            <td>$14,200</td>
-                            <td>$78,500</td>
-                            <td>$18,400</td>
-                            <td>82%</td>
-                            <td>48%</td>
-                            <td class="pp-roi">91</td>
-                        </tr>
-                        <tr>
-                            <td class="pp-college">Lakeside Institute of Tech</td>
-                            <td>TX</td>
-                            <td>$11,800</td>
-                            <td>$72,100</td>
-                            <td>$16,200</td>
-                            <td>76%</td>
-                            <td>55%</td>
-                            <td class="pp-roi">88</td>
-                        </tr>
-                        <tr>
-                            <td class="pp-college">Harborview College</td>
-                            <td>FL</td>
-                            <td>$9,650</td>
-                            <td>$64,300</td>
-                            <td>$14,800</td>
-                            <td>71%</td>
-                            <td>62%</td>
-                            <td class="pp-roi">84</td>
-                        </tr>
-                        <tr>
-                            <td class="pp-college">Northbridge University</td>
-                            <td>NY</td>
-                            <td>$22,400</td>
-                            <td>$81,200</td>
-                            <td>$24,100</td>
-                            <td>85%</td>
-                            <td>32%</td>
-                            <td class="pp-roi">79</td>
-                        </tr>
-                        <tr>
-                            <td class="pp-college">Prairie Crest College</td>
-                            <td>IL</td>
-                            <td>$12,900</td>
-                            <td>$68,750</td>
-                            <td>$17,600</td>
-                            <td>74%</td>
-                            <td>58%</td>
-                            <td class="pp-roi">86</td>
-                        </tr>
-                        <tr>
-                            <td class="pp-college">Cedar Ridge University</td>
-                            <td>WA</td>
-                            <td>$15,100</td>
-                            <td>$75,900</td>
-                            <td>$19,200</td>
-                            <td>80%</td>
-                            <td>44%</td>
-                            <td class="pp-roi">87</td>
-                        </tr>
-                        <tr>
-                            <td class="pp-college">Silver Oak State</td>
-                            <td>AZ</td>
-                            <td>$10,400</td>
-                            <td>$61,800</td>
-                            <td>$13,500</td>
-                            <td>69%</td>
-                            <td>67%</td>
-                            <td class="pp-roi">83</td>
-                        </tr>
-                        <tr>
-                            <td class="pp-college">Elm &amp; Market College</td>
-                            <td>MA</td>
-                            <td>$28,600</td>
-                            <td>$89,400</td>
-                            <td>$27,800</td>
-                            <td>88%</td>
-                            <td>28%</td>
-                            <td class="pp-roi">81</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+
+        {% if colleges|length == 0 %}
+
+
+
+        <div class="alert alert-warning">
+
+            No colleges matched your search.
+
         </div>
+
+
+
+        {% else %}
+
+        <div class="pp-table-card">
+
+            <div class="px-3 pt-3 pb-2 border-bottom border-secondary border-opacity-25">
+
+                <div class="row g-3 align-items-end">
+
+                    <div class="col-md-6">
+
+                        <label for="college-search" class="form-label pp-label">Search colleges</label>
+
+                        <input type="text" id="college-search" class="form-control pp-input"
+
+                               placeholder="Search colleges..." autocomplete="off">
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label for="college-sort" class="form-label pp-label">Sort by</label>
+
+                        <select id="college-sort" class="form-select pp-input">
+
+                            <option value="earnings">Highest Earnings</option>
+
+                            <option value="tuition">Lowest Tuition</option>
+
+                            <option value="debt">Lowest Debt</option>
+
+                            <option value="acceptance">Highest Acceptance Rate</option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="table-responsive">
+
+                <table class="table pp-table mb-0">
+
+                    <thead>
+
+                        <tr>
+
+                            <th scope="col">College</th>
+
+                            <th scope="col">State</th>
+
+                            <th scope="col">Tuition</th>
+
+                            <th scope="col">Median Earnings</th>
+
+                            <th scope="col">Student Debt</th>
+
+                            <th scope="col">Graduation Rate</th>
+
+                            <th scope="col">Acceptance Rate</th>
+
+                            <th scope="col">ROI Score</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="college-rows">
+
+
+
+                    {% for college in colleges %}
+
+                    <tr data-name="{{ college.name|lower }}"
+
+                        data-tuition="{{ college.tuition if college.tuition is not none else '' }}"
+
+                        data-earnings="{{ college.earnings if college.earnings is not none else '' }}"
+
+                        data-debt="{{ college.debt if college.debt is not none else '' }}"
+
+                        data-acceptance="{{ college.acceptance_rate if college.acceptance_rate is not none else '' }}">
+
+
+
+                        <td class="pp-college">
+
+                            {{ college.name }}
+
+                        </td>
+
+
+
+                        <td>
+
+                            {{ college.state }}
+
+                        </td>
+
+
+
+                        <td>
+
+                            {% if college.tuition %}
+
+                                ${{ "{:,}".format(college.tuition) }}
+
+                            {% else %}
+
+                                N/A
+
+                            {% endif %}
+
+                        </td>
+
+
+
+                        <td>
+
+                            {% if college.earnings %}
+
+                                ${{ "{:,}".format(college.earnings) }}
+
+                            {% else %}
+
+                                N/A
+
+                            {% endif %}
+
+                        </td>
+
+
+
+                        <td>
+
+                            {% if college.debt %}
+
+                                ${{ "{:,}".format(college.debt) }}
+
+                            {% else %}
+
+                                N/A
+
+                            {% endif %}
+
+                        </td>
+
+
+
+                        <td>
+
+                            {% if college.graduation_rate %}
+
+                                {{ "%.1f"|format(college.graduation_rate * 100) }}%
+
+                            {% else %}
+
+                                N/A
+
+                            {% endif %}
+
+                        </td>
+
+
+
+                        <td>
+
+                            {% if college.acceptance_rate %}
+
+                                {{ "%.1f"|format(college.acceptance_rate * 100) }}%
+
+                            {% else %}
+
+                                N/A
+
+                            {% endif %}
+
+                        </td>
+
+
+
+                        <td class="pp-roi">
+
+                            --
+
+                        </td>
+
+
+
+                    </tr>
+
+                    {% endfor %}
+
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+
+            <div id="college-pagination" class="d-flex flex-wrap justify-content-center align-items-center gap-2 py-3 px-3"></div>
+
+        </div>
+
+        {% endif %}
+
     </div>
+
 </section>
+
+
 
 <section class="pp-stats-section">
+
     <div class="container-xl">
+
         <div class="row g-4">
+
             <div class="col-md-4">
+
                 <div class="pp-stat-card">
+
                     <p class="pp-stat-label">Average Tuition</p>
-                    <p class="pp-stat-value">$15,630</p>
+
+                    <p class="pp-stat-value">${{ "{:,}".format(average_tuition) }}</p>
+
                     <p class="pp-stat-hint">Across displayed results</p>
+
                 </div>
+
             </div>
 
+
+
             <div class="col-md-4">
+
                 <div class="pp-stat-card">
+
                     <p class="pp-stat-label">Average Earnings</p>
-                    <p class="pp-stat-value">$74,000</p>
+
+                    <p class="pp-stat-value">${{ "{:,}".format(average_earnings) }}</p>
+
                     <p class="pp-stat-hint">Median mid-career estimate</p>
+
                 </div>
+
             </div>
 
+
+
             <div class="col-md-4">
+
                 <div class="pp-stat-card">
+
                     <p class="pp-stat-label">Average Debt</p>
-                    <p class="pp-stat-value">$18,950</p>
+
+                    <p class="pp-stat-value">${{ "{:,}".format(average_debt) }}</p>
+
                     <p class="pp-stat-hint">Typical graduate loan load</p>
+
                 </div>
+
             </div>
+
         </div>
+
     </div>
+
 </section>
+
+
+
+{% if colleges|length > 0 %}
+
+<script>
+
+(function () {
+
+    var ROWS_PER_PAGE = 25;
+
+    var tbody = document.getElementById("college-rows");
+
+    var searchInput = document.getElementById("college-search");
+
+    var sortSelect = document.getElementById("college-sort");
+
+    var countBadge = document.getElementById("results-count");
+
+    var paginationEl = document.getElementById("college-pagination");
+
+
+
+    if (!tbody) {
+
+        return;
+
+    }
+
+
+
+    var allRows = Array.from(tbody.querySelectorAll("tr"));
+
+    var filteredRows = allRows.slice();
+
+    var currentPage = 1;
+
+
+
+    function numericValue(row, field) {
+
+        var value = row.dataset[field];
+
+        if (value === "" || value === undefined) {
+
+            return null;
+
+        }
+
+        return parseFloat(value);
+
+    }
+
+
+
+    function compareRows(a, b, sortBy) {
+
+        var aVal;
+
+        var bVal;
+
+
+
+        if (sortBy === "earnings") {
+
+            aVal = numericValue(a, "earnings");
+
+            bVal = numericValue(b, "earnings");
+
+            return (bVal !== null ? bVal : -Infinity) - (aVal !== null ? aVal : -Infinity);
+
+        }
+
+
+
+        if (sortBy === "tuition") {
+
+            aVal = numericValue(a, "tuition");
+
+            bVal = numericValue(b, "tuition");
+
+            return (aVal !== null ? aVal : Infinity) - (bVal !== null ? bVal : Infinity);
+
+        }
+
+
+
+        if (sortBy === "debt") {
+
+            aVal = numericValue(a, "debt");
+
+            bVal = numericValue(b, "debt");
+
+            return (aVal !== null ? aVal : Infinity) - (bVal !== null ? bVal : Infinity);
+
+        }
+
+
+
+        if (sortBy === "acceptance") {
+
+            aVal = numericValue(a, "acceptance");
+
+            bVal = numericValue(b, "acceptance");
+
+            return (bVal !== null ? bVal : -Infinity) - (aVal !== null ? aVal : -Infinity);
+
+        }
+
+
+
+        return 0;
+
+    }
+
+
+
+    function applyFilters(resetPage) {
+
+        var query = searchInput.value.trim().toLowerCase();
+
+        var sortBy = sortSelect.value;
+
+
+
+        filteredRows = allRows.filter(function (row) {
+
+            return row.dataset.name.indexOf(query) !== -1;
+
+        });
+
+
+
+        filteredRows.sort(function (a, b) {
+
+            return compareRows(a, b, sortBy);
+
+        });
+
+
+
+        if (resetPage) {
+
+            currentPage = 1;
+
+        }
+
+
+
+        renderTable();
+
+    }
+
+
+
+    function renderTable() {
+
+        var totalPages = Math.max(1, Math.ceil(filteredRows.length / ROWS_PER_PAGE));
+
+
+
+        if (currentPage > totalPages) {
+
+            currentPage = totalPages;
+
+        }
+
+
+
+        allRows.forEach(function (row) {
+
+            row.style.display = "none";
+
+        });
+
+
+
+        filteredRows.forEach(function (row) {
+
+            tbody.appendChild(row);
+
+        });
+
+
+
+        var start = (currentPage - 1) * ROWS_PER_PAGE;
+
+        var pageRows = filteredRows.slice(start, start + ROWS_PER_PAGE);
+
+
+
+        pageRows.forEach(function (row) {
+
+            row.style.display = "";
+
+        });
+
+
+
+        if (countBadge) {
+
+            countBadge.textContent = filteredRows.length + " Schools Found";
+
+        }
+
+
+
+        renderPagination(totalPages);
+
+    }
+
+
+
+    function renderPagination(totalPages) {
+
+        paginationEl.innerHTML = "";
+
+
+
+        if (filteredRows.length === 0) {
+
+            paginationEl.innerHTML = "<span class=\"text-secondary\">No matching colleges on this page.</span>";
+
+            return;
+
+        }
+
+
+
+        var prevBtn = document.createElement("button");
+
+        prevBtn.type = "button";
+
+        prevBtn.className = "btn pp-btn-secondary btn-sm";
+
+        prevBtn.textContent = "Previous";
+
+        prevBtn.disabled = currentPage === 1;
+
+        prevBtn.addEventListener("click", function () {
+
+            if (currentPage > 1) {
+
+                currentPage -= 1;
+
+                renderTable();
+
+            }
+
+        });
+
+        paginationEl.appendChild(prevBtn);
+
+
+
+        for (var page = 1; page <= totalPages; page += 1) {
+
+            var pageBtn = document.createElement("button");
+
+            pageBtn.type = "button";
+
+            pageBtn.className = "btn btn-sm " + (page === currentPage ? "pp-btn-primary" : "pp-btn-secondary");
+
+            pageBtn.textContent = String(page);
+
+            pageBtn.setAttribute("aria-label", "Page " + page);
+
+            pageBtn.addEventListener("click", (function (pageNumber) {
+
+                return function () {
+
+                    currentPage = pageNumber;
+
+                    renderTable();
+
+                };
+
+            }(page)));
+
+            paginationEl.appendChild(pageBtn);
+
+        }
+
+
+
+        var nextBtn = document.createElement("button");
+
+        nextBtn.type = "button";
+
+        nextBtn.className = "btn pp-btn-secondary btn-sm";
+
+        nextBtn.textContent = "Next";
+
+        nextBtn.disabled = currentPage === totalPages;
+
+        nextBtn.addEventListener("click", function () {
+
+            if (currentPage < totalPages) {
+
+                currentPage += 1;
+
+                renderTable();
+
+            }
+
+        });
+
+        paginationEl.appendChild(nextBtn);
+
+    }
+
+
+
+    searchInput.addEventListener("input", function () {
+
+        applyFilters(true);
+
+    });
+
+
+
+    sortSelect.addEventListener("change", function () {
+
+        applyFilters(true);
+
+    });
+
+
+
+    applyFilters(true);
+
+})();
+
+</script>
+
+{% endif %}
+
 {% endblock %}
+
