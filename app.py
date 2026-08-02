@@ -10,6 +10,16 @@ def home():
     return render_template("home.html")
 
 
+@app.route("/how-it-works")
+def how_it_works():
+    return render_template("how_it_works.html")
+
+
+@app.route("/roi")
+def roi():
+    return render_template("about_roi.html")
+
+
 @app.route("/results")
 def results():
 
