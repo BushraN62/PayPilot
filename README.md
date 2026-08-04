@@ -95,11 +95,7 @@ COLLEGE_SCORECARD_API_KEY=your_api_key_here
 python app.py
 ```
 
-Then open your browser and go to:
-
-```
-http://127.0.0.1:5000
-```
+Flask will display the local URL in the terminal. Open that URL in your web browser (typically `http://127.0.0.1:5000`).
 
 ---
 
