@@ -1,0 +1,415 @@
+{% extends "base.html" %}
+
+{% block title %}PayPilot — ROI Analysis{% endblock %}
+
+{% block content %}
+<section class="pp-results-header">
+    <div class="container-xl">
+        <button
+            type="button"
+            class="btn pp-btn-back"
+            onclick="window.history.back()"
+        >
+            &larr; Back to Results
+        </button>
+
+        <p class="pp-eyebrow">School comparison</p>
+        <h1 class="pp-results-title">ROI Analysis</h1>
+
+        <p class="pp-results-subtitle">
+            Compare estimated educational cost, student debt,
+            median earnings, and long-term return on investment.
+        </p>
+
+        {% if colleges %}
+            <span class="pp-results-badge">
+                {{ colleges|length }}
+                {% if colleges|length == 1 %}
+                    School Compared
+                {% else %}
+                    Schools Compared
+                {% endif %}
+            </span>
+        {% endif %}
+    </div>
+</section>
+
+<section class="pp-results-table-section">
+    <div class="container-xl">
+        {% if error_message %}
+            <div class="alert alert-warning">
+                {{ error_message }}
+            </div>
+
+            <a href="{{ url_for('home') }}" class="btn pp-btn-primary">
+                Search for Schools
+            </a>
+
+        {% elif colleges|length == 0 %}
+            <div class="alert alert-warning">
+                The selected schools could not be found.
+            </div>
+
+        {% else %}
+            <div class="pp-roi-formula-card mb-4">
+                <h2 class="pp-chart-title">How this estimate is calculated</h2>
+
+                <p class="pp-chart-description">
+                    Estimated cost equals four years of annual tuition plus
+                    median student debt. Estimated return uses ten years of
+                    median annual earnings.
+                </p>
+
+                <code class="pp-roi-formula">
+                    ROI = ((10-year earnings − estimated cost)
+                    ÷ estimated cost) × 100
+                </code>
+
+                <p class="pp-roi-disclaimer mb-0">
+                    This comparison does not include scholarships, living
+                    expenses, taxes, interest, wage growth, or earnings that
+                    may have occurred without attending college.
+                </p>
+            </div>
+
+            <div class="row g-4 mb-4">
+                {% for college in colleges %}
+                    <div class="col-lg-4 col-md-6">
+                        <article class="pp-ranking-card">
+                            <div class="d-flex justify-content-between gap-3">
+                                <div>
+                                    <p class="pp-ranking-label">
+                                        {% if college.roi_rank %}
+                                            ROI Rank #{{ college.roi_rank }}
+                                        {% else %}
+                                            ROI unavailable
+                                        {% endif %}
+                                    </p>
+
+                                    <h2 class="pp-ranking-school">
+                                        {{ college.name }}
+                                    </h2>
+
+                                    <p class="pp-ranking-state">
+                                        {{ college.state }}
+                                    </p>
+                                </div>
+
+                                <div class="pp-ranking-score">
+                                    {% if college.roi_score is not none %}
+                                        {{ "{:,.1f}".format(college.roi_score) }}%
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <dl class="pp-roi-metrics">
+                                <div>
+                                    <dt>Annual tuition</dt>
+                                    <dd>
+                                        {% if college.tuition is not none %}
+                                            ${{ "{:,.0f}".format(college.tuition) }}
+                                        {% else %}
+                                            N/A
+                                        {% endif %}
+                                    </dd>
+                                </div>
+
+                                <div>
+                                    <dt>Median earnings</dt>
+                                    <dd>
+                                        {% if college.earnings is not none %}
+                                            ${{ "{:,.0f}".format(college.earnings) }}
+                                        {% else %}
+                                            N/A
+                                        {% endif %}
+                                    </dd>
+                                </div>
+
+                                <div>
+                                    <dt>Median debt</dt>
+                                    <dd>
+                                        {% if college.debt is not none %}
+                                            ${{ "{:,.0f}".format(college.debt) }}
+                                        {% else %}
+                                            N/A
+                                        {% endif %}
+                                    </dd>
+                                </div>
+
+                                <div>
+                                    <dt>Estimated total cost</dt>
+                                    <dd>
+                                        {% if college.roi %}
+                                            ${{ "{:,.0f}".format(college.roi.total_cost) }}
+                                        {% else %}
+                                            N/A
+                                        {% endif %}
+                                    </dd>
+                                </div>
+
+                                <div>
+                                    <dt>Estimated 10-year earnings</dt>
+                                    <dd>
+                                        {% if college.roi %}
+                                            ${{ "{:,.0f}".format(college.roi.projected_earnings) }}
+                                        {% else %}
+                                            N/A
+                                        {% endif %}
+                                    </dd>
+                                </div>
+
+                                <div>
+                                    <dt>Estimated net return</dt>
+                                    <dd>
+                                        {% if college.roi %}
+                                            ${{ "{:,.0f}".format(college.roi.net_return) }}
+                                        {% else %}
+                                            N/A
+                                        {% endif %}
+                                    </dd>
+                                </div>
+                            </dl>
+                        </article>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {% if chart_data.labels %}
+                <div class="row g-4">
+                    <div class="col-xl-6">
+                        <div class="pp-chart-card">
+                            <h2 class="pp-chart-title">
+                                Earnings vs. Tuition
+                            </h2>
+
+                            <p class="pp-chart-description">
+                                Compare annual median earnings with annual
+                                in-state tuition.
+                            </p>
+
+                            <div class="pp-chart-container">
+                                <canvas id="earnings-tuition-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-6">
+                        <div class="pp-chart-card">
+                            <h2 class="pp-chart-title">
+                                Debt vs. Earnings
+                            </h2>
+
+                            <p class="pp-chart-description">
+                                Compare median student debt with median
+                                annual earnings.
+                            </p>
+
+                            <div class="pp-chart-container">
+                                <canvas id="debt-earnings-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="pp-chart-card">
+                            <h2 class="pp-chart-title">
+                                ROI Ranking
+                            </h2>
+
+                            <p class="pp-chart-description">
+                                Schools are ranked by their estimated
+                                ten-year ROI percentage.
+                            </p>
+
+                            <div class="pp-chart-container pp-chart-container-wide">
+                                <canvas id="roi-ranking-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-warning">
+                    ROI charts could not be generated because the selected
+                    schools are missing tuition or earnings information.
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+</section>
+
+{% if chart_data.labels %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
+
+<script>
+(function () {
+    var chartData = {{ chart_data|tojson }};
+
+    function formatCurrency(value) {
+        return new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+            maximumFractionDigits: 0
+        }).format(value);
+    }
+
+    var commonOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: {
+            mode: "index",
+            intersect: false
+        },
+        scales: {
+            x: {
+                ticks: {
+                    color: "#94a3b8"
+                },
+                grid: {
+                    color: "rgba(148, 163, 184, 0.12)"
+                }
+            },
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    color: "#94a3b8",
+                    callback: function (value) {
+                        return formatCurrency(value);
+                    }
+                },
+                grid: {
+                    color: "rgba(148, 163, 184, 0.12)"
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                labels: {
+                    color: "#f1f5f9"
+                }
+            },
+            tooltip: {
+                callbacks: {
+                    label: function (context) {
+                        return (
+                            context.dataset.label +
+                            ": " +
+                            formatCurrency(context.raw)
+                        );
+                    }
+                }
+            }
+        }
+    };
+
+    new Chart(
+        document.getElementById("earnings-tuition-chart"),
+        {
+            type: "bar",
+            data: {
+                labels: chartData.labels,
+                datasets: [
+                    {
+                        label: "Median Earnings",
+                        data: chartData.earnings,
+                        backgroundColor: "rgba(59, 130, 246, 0.8)"
+                    },
+                    {
+                        label: "Annual Tuition",
+                        data: chartData.tuition,
+                        backgroundColor: "rgba(96, 165, 250, 0.45)"
+                    }
+                ]
+            },
+            options: commonOptions
+        }
+    );
+
+    new Chart(
+        document.getElementById("debt-earnings-chart"),
+        {
+            type: "bar",
+            data: {
+                labels: chartData.labels,
+                datasets: [
+                    {
+                        label: "Median Earnings",
+                        data: chartData.earnings,
+                        backgroundColor: "rgba(52, 211, 153, 0.72)"
+                    },
+                    {
+                        label: "Median Student Debt",
+                        data: chartData.debt,
+                        backgroundColor: "rgba(248, 113, 113, 0.65)"
+                    }
+                ]
+            },
+            options: commonOptions
+        }
+    );
+
+    new Chart(
+        document.getElementById("roi-ranking-chart"),
+        {
+            type: "bar",
+            data: {
+                labels: chartData.labels,
+                datasets: [
+                    {
+                        label: "Estimated ROI",
+                        data: chartData.roi_scores,
+                        backgroundColor: "rgba(59, 130, 246, 0.78)"
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: "y",
+                scales: {
+                    x: {
+                        ticks: {
+                            color: "#94a3b8",
+                            callback: function (value) {
+                                return value.toLocaleString() + "%";
+                            }
+                        },
+                        grid: {
+                            color: "rgba(148, 163, 184, 0.12)"
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: "#94a3b8"
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: "#f1f5f9"
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                return (
+                                    "Estimated ROI: " +
+                                    context.raw.toLocaleString() +
+                                    "%"
+                                );
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    );
+})();
+</script>
+{% endif %}
+{% endblock %}

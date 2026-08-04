@@ -1,668 +1,894 @@
 {% extends "base.html" %}
 
-
-
 {% block title %}PayPilot — Search Results{% endblock %}
-
-
 
 {% block content %}
 
 <section class="pp-results-header">
-
     <div class="container-xl">
-
-        <a href="{{ url_for('home') }}" class="btn pp-btn-back">&larr; Back</a>
-
-
+        <a href="{{ url_for('home') }}" class="btn pp-btn-back">
+            &larr; Back
+        </a>
 
         <h1 class="pp-results-title">Search Results</h1>
 
         <p class="pp-results-subtitle">
-
             Compare colleges based on tuition, salary, debt, and graduation outcomes.
-
         </p>
 
         <span id="results-count" class="pp-results-badge">
-
             {{ colleges|length }} Schools Found
-
         </span>
-
     </div>
-
 </section>
 
 
-
 <section class="pp-results-table-section">
-
     <div class="container-xl">
 
         {% if colleges|length == 0 %}
 
-
-
-        <div class="alert alert-warning">
-
-            No colleges matched your search.
-
-        </div>
-
-
+            <div class="alert alert-warning">
+                No colleges matched your search.
+            </div>
 
         {% else %}
 
-        <div class="pp-table-card">
+            <div class="pp-table-card">
 
-            <div class="px-3 pt-3 pb-2 border-bottom border-secondary border-opacity-25">
+                <div class="px-3 pt-3 pb-2 border-bottom border-secondary border-opacity-25">
+                    <div class="row g-3 align-items-end">
 
-                <div class="row g-3 align-items-end">
+                        <div class="col-md-6">
+                            <label
+                                for="college-search"
+                                class="form-label pp-label"
+                            >
+                                Search colleges
+                            </label>
 
-                    <div class="col-md-6">
+                            <input
+                                type="text"
+                                id="college-search"
+                                class="form-control pp-input"
+                                placeholder="Search colleges..."
+                                autocomplete="off"
+                            >
+                        </div>
 
-                        <label for="college-search" class="form-label pp-label">Search colleges</label>
+                        <div class="col-md-6">
+                            <label
+                                for="college-sort"
+                                class="form-label pp-label"
+                            >
+                                Sort by
+                            </label>
 
-                        <input type="text" id="college-search" class="form-control pp-input"
+                            <select
+                                id="college-sort"
+                                class="form-select pp-input"
+                            >
+                                <option value="earnings">
+                                    Highest Earnings
+                                </option>
 
-                               placeholder="Search colleges..." autocomplete="off">
+                                <option value="tuition">
+                                    Lowest Tuition
+                                </option>
+
+                                <option value="debt">
+                                    Lowest Debt
+                                </option>
+
+                                <option value="acceptance">
+                                    Highest Acceptance Rate
+                                </option>
+
+                                <option value="roi">
+                                    Highest ROI
+                                </option>
+                            </select>
+                        </div>
 
                     </div>
-
-                    <div class="col-md-6">
-
-                        <label for="college-sort" class="form-label pp-label">Sort by</label>
-
-                        <select id="college-sort" class="form-select pp-input">
-
-                            <option value="earnings">Highest Earnings</option>
-
-                            <option value="tuition">Lowest Tuition</option>
-
-                            <option value="debt">Lowest Debt</option>
-
-                            <option value="acceptance">Highest Acceptance Rate</option>
-
-                        </select>
-
-                    </div>
-
                 </div>
 
+
+                <div class="pp-compare-toolbar">
+                    <div>
+                        <strong id="selected-count">
+                            0 schools selected
+                        </strong>
+
+                        <p class="pp-compare-help mb-0">
+                            Select up to 10 schools for ROI comparison.
+                        </p>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-2">
+                        <button
+                            type="button"
+                            id="clear-selection"
+                            class="btn pp-btn-secondary btn-sm"
+                            disabled
+                        >
+                            Clear Selection
+                        </button>
+
+                        <button
+                            type="button"
+                            id="view-roi-analysis"
+                            class="btn pp-btn-primary btn-sm"
+                            disabled
+                        >
+                            View ROI Analysis
+                        </button>
+                    </div>
+                </div>
+
+
+                <div
+                    id="selection-message"
+                    class="alert alert-warning mx-3 mt-3 mb-0 d-none"
+                    role="alert"
+                ></div>
+
+
+                <div class="table-responsive">
+                    <table class="table pp-table mb-0">
+
+                        <thead>
+                            <tr>
+                                <th
+                                    scope="col"
+                                    class="pp-select-column"
+                                >
+                                    <input
+                                        type="checkbox"
+                                        id="select-visible-schools"
+                                        class="form-check-input pp-school-checkbox"
+                                        aria-label="Select schools visible on this page"
+                                    >
+                                </th>
+
+                                <th scope="col">College</th>
+                                <th scope="col">State</th>
+                                <th scope="col">Tuition</th>
+                                <th scope="col">Median Earnings</th>
+                                <th scope="col">Student Debt</th>
+                                <th scope="col">Graduation Rate</th>
+                                <th scope="col">Acceptance Rate</th>
+                                <th scope="col">ROI Score</th>
+                            </tr>
+                        </thead>
+
+
+                        <tbody id="college-rows">
+
+                            {% for college in colleges %}
+
+                                <tr
+                                    data-school-id="{{ college.id }}"
+                                    data-name="{{ college.name|lower }}"
+                                    data-tuition="{{ college.tuition if college.tuition is not none else '' }}"
+                                    data-earnings="{{ college.earnings if college.earnings is not none else '' }}"
+                                    data-debt="{{ college.debt if college.debt is not none else '' }}"
+                                    data-acceptance="{{ college.acceptance_rate if college.acceptance_rate is not none else '' }}"
+                                    data-roi="{{ college.roi_score if college.roi_score is not none else '' }}"
+                                >
+
+                                    <td class="pp-select-column">
+                                        <input
+                                            type="checkbox"
+                                            class="form-check-input pp-school-checkbox school-select"
+                                            value="{{ college.id }}"
+                                            aria-label="Select {{ college.name }}"
+                                        >
+                                    </td>
+
+
+                                    <td class="pp-college">
+                                        {{ college.name }}
+                                    </td>
+
+
+                                    <td>
+                                        {{ college.state }}
+                                    </td>
+
+
+                                    <td>
+                                        {% if college.tuition is not none %}
+                                            ${{ "{:,.0f}".format(college.tuition) }}
+                                        {% else %}
+                                            N/A
+                                        {% endif %}
+                                    </td>
+
+
+                                    <td>
+                                        {% if college.earnings is not none %}
+                                            ${{ "{:,.0f}".format(college.earnings) }}
+                                        {% else %}
+                                            N/A
+                                        {% endif %}
+                                    </td>
+
+
+                                    <td>
+                                        {% if college.debt is not none %}
+                                            ${{ "{:,.0f}".format(college.debt) }}
+                                        {% else %}
+                                            N/A
+                                        {% endif %}
+                                    </td>
+
+
+                                    <td>
+                                        {% if college.graduation_rate is not none %}
+                                            {{ "%.1f"|format(
+                                                college.graduation_rate * 100
+                                            ) }}%
+                                        {% else %}
+                                            N/A
+                                        {% endif %}
+                                    </td>
+
+
+                                    <td>
+                                        {% if college.acceptance_rate is not none %}
+                                            {{ "%.1f"|format(
+                                                college.acceptance_rate * 100
+                                            ) }}%
+                                        {% else %}
+                                            N/A
+                                        {% endif %}
+                                    </td>
+
+
+                                    <td class="pp-roi">
+                                        {% if college.roi_score is not none %}
+                                            {{ "{:,.1f}".format(
+                                                college.roi_score
+                                            ) }}%
+                                        {% else %}
+                                            N/A
+                                        {% endif %}
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+                </div>
+
+
+                <div
+                    id="college-pagination"
+                    class="d-flex flex-wrap justify-content-center align-items-center gap-2 py-3 px-3"
+                ></div>
+
             </div>
-
-
-
-            <div class="table-responsive">
-
-                <table class="table pp-table mb-0">
-
-                    <thead>
-
-                        <tr>
-
-                            <th scope="col">College</th>
-
-                            <th scope="col">State</th>
-
-                            <th scope="col">Tuition</th>
-
-                            <th scope="col">Median Earnings</th>
-
-                            <th scope="col">Student Debt</th>
-
-                            <th scope="col">Graduation Rate</th>
-
-                            <th scope="col">Acceptance Rate</th>
-
-                            <th scope="col">ROI Score</th>
-
-                        </tr>
-
-                    </thead>
-
-                    <tbody id="college-rows">
-
-
-
-                    {% for college in colleges %}
-
-                    <tr data-name="{{ college.name|lower }}"
-
-                        data-tuition="{{ college.tuition if college.tuition is not none else '' }}"
-
-                        data-earnings="{{ college.earnings if college.earnings is not none else '' }}"
-
-                        data-debt="{{ college.debt if college.debt is not none else '' }}"
-
-                        data-acceptance="{{ college.acceptance_rate if college.acceptance_rate is not none else '' }}">
-
-
-
-                        <td class="pp-college">
-
-                            {{ college.name }}
-
-                        </td>
-
-
-
-                        <td>
-
-                            {{ college.state }}
-
-                        </td>
-
-
-
-                        <td>
-
-                            {% if college.tuition %}
-
-                                ${{ "{:,}".format(college.tuition) }}
-
-                            {% else %}
-
-                                N/A
-
-                            {% endif %}
-
-                        </td>
-
-
-
-                        <td>
-
-                            {% if college.earnings %}
-
-                                ${{ "{:,}".format(college.earnings) }}
-
-                            {% else %}
-
-                                N/A
-
-                            {% endif %}
-
-                        </td>
-
-
-
-                        <td>
-
-                            {% if college.debt %}
-
-                                ${{ "{:,}".format(college.debt) }}
-
-                            {% else %}
-
-                                N/A
-
-                            {% endif %}
-
-                        </td>
-
-
-
-                        <td>
-
-                            {% if college.graduation_rate %}
-
-                                {{ "%.1f"|format(college.graduation_rate * 100) }}%
-
-                            {% else %}
-
-                                N/A
-
-                            {% endif %}
-
-                        </td>
-
-
-
-                        <td>
-
-                            {% if college.acceptance_rate %}
-
-                                {{ "%.1f"|format(college.acceptance_rate * 100) }}%
-
-                            {% else %}
-
-                                N/A
-
-                            {% endif %}
-
-                        </td>
-
-
-
-                        <td class="pp-roi">
-
-                            --
-
-                        </td>
-
-
-
-                    </tr>
-
-                    {% endfor %}
-
-
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-
-
-            <div id="college-pagination" class="d-flex flex-wrap justify-content-center align-items-center gap-2 py-3 px-3"></div>
-
-        </div>
 
         {% endif %}
 
     </div>
-
 </section>
-
 
 
 <section class="pp-stats-section">
-
     <div class="container-xl">
-
         <div class="row g-4">
 
             <div class="col-md-4">
-
                 <div class="pp-stat-card">
+                    <p class="pp-stat-label">
+                        Average Tuition
+                    </p>
 
-                    <p class="pp-stat-label">Average Tuition</p>
+                    <p class="pp-stat-value">
+                        ${{ "{:,.0f}".format(average_tuition) }}
+                    </p>
 
-                    <p class="pp-stat-value">${{ "{:,}".format(average_tuition) }}</p>
-
-                    <p class="pp-stat-hint">Across displayed results</p>
-
+                    <p class="pp-stat-hint">
+                        Across displayed results
+                    </p>
                 </div>
-
             </div>
 
 
-
             <div class="col-md-4">
-
                 <div class="pp-stat-card">
+                    <p class="pp-stat-label">
+                        Average Earnings
+                    </p>
 
-                    <p class="pp-stat-label">Average Earnings</p>
+                    <p class="pp-stat-value">
+                        ${{ "{:,.0f}".format(average_earnings) }}
+                    </p>
 
-                    <p class="pp-stat-value">${{ "{:,}".format(average_earnings) }}</p>
-
-                    <p class="pp-stat-hint">Median mid-career estimate</p>
-
+                    <p class="pp-stat-hint">
+                        Median mid-career estimate
+                    </p>
                 </div>
-
             </div>
 
 
-
             <div class="col-md-4">
-
                 <div class="pp-stat-card">
+                    <p class="pp-stat-label">
+                        Average Debt
+                    </p>
 
-                    <p class="pp-stat-label">Average Debt</p>
+                    <p class="pp-stat-value">
+                        ${{ "{:,.0f}".format(average_debt) }}
+                    </p>
 
-                    <p class="pp-stat-value">${{ "{:,}".format(average_debt) }}</p>
-
-                    <p class="pp-stat-hint">Typical graduate loan load</p>
-
+                    <p class="pp-stat-hint">
+                        Typical graduate loan load
+                    </p>
                 </div>
-
             </div>
 
         </div>
-
     </div>
-
 </section>
-
 
 
 {% if colleges|length > 0 %}
 
 <script>
-
 (function () {
+    "use strict";
 
     var ROWS_PER_PAGE = 25;
+    var MAX_SELECTED_SCHOOLS = 10;
 
     var tbody = document.getElementById("college-rows");
-
     var searchInput = document.getElementById("college-search");
-
     var sortSelect = document.getElementById("college-sort");
-
     var countBadge = document.getElementById("results-count");
-
     var paginationEl = document.getElementById("college-pagination");
 
+    var viewRoiButton =
+        document.getElementById("view-roi-analysis");
+
+    var clearSelectionButton =
+        document.getElementById("clear-selection");
+
+    var selectedCount =
+        document.getElementById("selected-count");
+
+    var selectionMessage =
+        document.getElementById("selection-message");
+
+    var selectVisibleCheckbox =
+        document.getElementById("select-visible-schools");
 
 
     if (!tbody) {
-
         return;
-
     }
 
 
-
-    var allRows = Array.from(tbody.querySelectorAll("tr"));
+    var allRows = Array.from(
+        tbody.querySelectorAll("tr")
+    );
 
     var filteredRows = allRows.slice();
-
     var currentPage = 1;
+    var currentPageRows = [];
+    var selectedSchoolIds = new Set();
 
+
+    function getRowCheckbox(row) {
+        return row.querySelector(".school-select");
+    }
+
+
+    function showSelectionMessage(message) {
+        if (!selectionMessage) {
+            return;
+        }
+
+        selectionMessage.textContent = message;
+        selectionMessage.classList.remove("d-none");
+    }
+
+
+    function hideSelectionMessage() {
+        if (!selectionMessage) {
+            return;
+        }
+
+        selectionMessage.textContent = "";
+        selectionMessage.classList.add("d-none");
+    }
+
+
+    function syncCheckboxes() {
+        allRows.forEach(function (row) {
+            var checkbox = getRowCheckbox(row);
+
+            if (!checkbox) {
+                return;
+            }
+
+            checkbox.checked = selectedSchoolIds.has(
+                row.dataset.schoolId
+            );
+        });
+    }
+
+
+    function updateSelectionControls() {
+        var count = selectedSchoolIds.size;
+
+        if (selectedCount) {
+            selectedCount.textContent =
+                count +
+                (count === 1
+                    ? " school selected"
+                    : " schools selected");
+        }
+
+        if (viewRoiButton) {
+            viewRoiButton.disabled = count === 0;
+        }
+
+        if (clearSelectionButton) {
+            clearSelectionButton.disabled = count === 0;
+        }
+
+
+        if (!selectVisibleCheckbox) {
+            return;
+        }
+
+
+        var selectedVisibleCount =
+            currentPageRows.filter(function (row) {
+                return selectedSchoolIds.has(
+                    row.dataset.schoolId
+                );
+            }).length;
+
+
+        selectVisibleCheckbox.checked =
+            currentPageRows.length > 0 &&
+            selectedVisibleCount === currentPageRows.length;
+
+
+        selectVisibleCheckbox.indeterminate =
+            selectedVisibleCount > 0 &&
+            selectedVisibleCount < currentPageRows.length;
+    }
+
+
+    function updateSelectionUI() {
+        syncCheckboxes();
+        updateSelectionControls();
+    }
 
 
     function numericValue(row, field) {
-
         var value = row.dataset[field];
 
-        if (value === "" || value === undefined) {
-
+        if (
+            value === "" ||
+            value === undefined ||
+            value === null
+        ) {
             return null;
-
         }
 
-        return parseFloat(value);
+        var parsedValue = parseFloat(value);
 
+        if (Number.isNaN(parsedValue)) {
+            return null;
+        }
+
+        return parsedValue;
     }
-
 
 
     function compareRows(a, b, sortBy) {
-
         var aVal;
-
         var bVal;
 
 
-
         if (sortBy === "earnings") {
-
             aVal = numericValue(a, "earnings");
-
             bVal = numericValue(b, "earnings");
 
-            return (bVal !== null ? bVal : -Infinity) - (aVal !== null ? aVal : -Infinity);
-
+            return (
+                (bVal !== null ? bVal : -Infinity) -
+                (aVal !== null ? aVal : -Infinity)
+            );
         }
-
 
 
         if (sortBy === "tuition") {
-
             aVal = numericValue(a, "tuition");
-
             bVal = numericValue(b, "tuition");
 
-            return (aVal !== null ? aVal : Infinity) - (bVal !== null ? bVal : Infinity);
-
+            return (
+                (aVal !== null ? aVal : Infinity) -
+                (bVal !== null ? bVal : Infinity)
+            );
         }
-
 
 
         if (sortBy === "debt") {
-
             aVal = numericValue(a, "debt");
-
             bVal = numericValue(b, "debt");
 
-            return (aVal !== null ? aVal : Infinity) - (bVal !== null ? bVal : Infinity);
-
+            return (
+                (aVal !== null ? aVal : Infinity) -
+                (bVal !== null ? bVal : Infinity)
+            );
         }
-
 
 
         if (sortBy === "acceptance") {
-
             aVal = numericValue(a, "acceptance");
-
             bVal = numericValue(b, "acceptance");
 
-            return (bVal !== null ? bVal : -Infinity) - (aVal !== null ? aVal : -Infinity);
-
+            return (
+                (bVal !== null ? bVal : -Infinity) -
+                (aVal !== null ? aVal : -Infinity)
+            );
         }
 
 
+        if (sortBy === "roi") {
+            aVal = numericValue(a, "roi");
+            bVal = numericValue(b, "roi");
+
+            return (
+                (bVal !== null ? bVal : -Infinity) -
+                (aVal !== null ? aVal : -Infinity)
+            );
+        }
+
 
         return 0;
-
     }
 
 
-
     function applyFilters(resetPage) {
-
-        var query = searchInput.value.trim().toLowerCase();
+        var query =
+            searchInput.value.trim().toLowerCase();
 
         var sortBy = sortSelect.value;
 
 
-
         filteredRows = allRows.filter(function (row) {
-
             return row.dataset.name.indexOf(query) !== -1;
-
         });
-
 
 
         filteredRows.sort(function (a, b) {
-
             return compareRows(a, b, sortBy);
-
         });
-
 
 
         if (resetPage) {
-
             currentPage = 1;
-
         }
-
 
 
         renderTable();
-
     }
-
 
 
     function renderTable() {
-
-        var totalPages = Math.max(1, Math.ceil(filteredRows.length / ROWS_PER_PAGE));
-
+        var totalPages = Math.max(
+            1,
+            Math.ceil(filteredRows.length / ROWS_PER_PAGE)
+        );
 
 
         if (currentPage > totalPages) {
-
             currentPage = totalPages;
-
         }
-
 
 
         allRows.forEach(function (row) {
-
             row.style.display = "none";
-
         });
-
 
 
         filteredRows.forEach(function (row) {
-
             tbody.appendChild(row);
-
         });
 
 
-
-        var start = (currentPage - 1) * ROWS_PER_PAGE;
-
-        var pageRows = filteredRows.slice(start, start + ROWS_PER_PAGE);
+        var start =
+            (currentPage - 1) * ROWS_PER_PAGE;
 
 
+        currentPageRows = filteredRows.slice(
+            start,
+            start + ROWS_PER_PAGE
+        );
 
-        pageRows.forEach(function (row) {
 
+        currentPageRows.forEach(function (row) {
             row.style.display = "";
-
         });
-
 
 
         if (countBadge) {
-
-            countBadge.textContent = filteredRows.length + " Schools Found";
-
+            countBadge.textContent =
+                filteredRows.length +
+                (filteredRows.length === 1
+                    ? " School Found"
+                    : " Schools Found");
         }
-
 
 
         renderPagination(totalPages);
-
+        updateSelectionUI();
     }
 
 
-
     function renderPagination(totalPages) {
-
         paginationEl.innerHTML = "";
 
 
-
         if (filteredRows.length === 0) {
-
-            paginationEl.innerHTML = "<span class=\"text-secondary\">No matching colleges on this page.</span>";
+            paginationEl.innerHTML =
+                '<span class="text-secondary">' +
+                "No matching colleges found." +
+                "</span>";
 
             return;
-
         }
-
 
 
         var prevBtn = document.createElement("button");
 
         prevBtn.type = "button";
-
-        prevBtn.className = "btn pp-btn-secondary btn-sm";
+        prevBtn.className =
+            "btn pp-btn-secondary btn-sm";
 
         prevBtn.textContent = "Previous";
-
         prevBtn.disabled = currentPage === 1;
 
+
         prevBtn.addEventListener("click", function () {
-
             if (currentPage > 1) {
-
                 currentPage -= 1;
-
                 renderTable();
-
             }
-
         });
+
 
         paginationEl.appendChild(prevBtn);
 
 
-
-        for (var page = 1; page <= totalPages; page += 1) {
-
-            var pageBtn = document.createElement("button");
+        for (
+            var page = 1;
+            page <= totalPages;
+            page += 1
+        ) {
+            var pageBtn =
+                document.createElement("button");
 
             pageBtn.type = "button";
 
-            pageBtn.className = "btn btn-sm " + (page === currentPage ? "pp-btn-primary" : "pp-btn-secondary");
+            pageBtn.className =
+                "btn btn-sm " +
+                (
+                    page === currentPage
+                        ? "pp-btn-primary"
+                        : "pp-btn-secondary"
+                );
 
             pageBtn.textContent = String(page);
 
-            pageBtn.setAttribute("aria-label", "Page " + page);
+            pageBtn.setAttribute(
+                "aria-label",
+                "Page " + page
+            );
 
-            pageBtn.addEventListener("click", (function (pageNumber) {
 
-                return function () {
+            pageBtn.addEventListener(
+                "click",
+                (function (pageNumber) {
+                    return function () {
+                        currentPage = pageNumber;
+                        renderTable();
+                    };
+                }(page))
+            );
 
-                    currentPage = pageNumber;
-
-                    renderTable();
-
-                };
-
-            }(page)));
 
             paginationEl.appendChild(pageBtn);
-
         }
-
 
 
         var nextBtn = document.createElement("button");
 
         nextBtn.type = "button";
-
-        nextBtn.className = "btn pp-btn-secondary btn-sm";
+        nextBtn.className =
+            "btn pp-btn-secondary btn-sm";
 
         nextBtn.textContent = "Next";
-
         nextBtn.disabled = currentPage === totalPages;
 
+
         nextBtn.addEventListener("click", function () {
-
             if (currentPage < totalPages) {
-
                 currentPage += 1;
-
                 renderTable();
-
             }
-
         });
 
-        paginationEl.appendChild(nextBtn);
 
+        paginationEl.appendChild(nextBtn);
     }
 
 
-
     searchInput.addEventListener("input", function () {
-
         applyFilters(true);
-
     });
-
 
 
     sortSelect.addEventListener("change", function () {
-
         applyFilters(true);
-
     });
 
 
+    tbody.addEventListener("change", function (event) {
+        if (
+            !event.target.classList.contains(
+                "school-select"
+            )
+        ) {
+            return;
+        }
+
+
+        var checkbox = event.target;
+        var schoolId = checkbox.value;
+
+        hideSelectionMessage();
+
+
+        if (checkbox.checked) {
+            if (
+                selectedSchoolIds.size >=
+                MAX_SELECTED_SCHOOLS
+            ) {
+                checkbox.checked = false;
+
+                showSelectionMessage(
+                    "You can compare a maximum of " +
+                    MAX_SELECTED_SCHOOLS +
+                    " schools at one time."
+                );
+
+                return;
+            }
+
+            selectedSchoolIds.add(schoolId);
+        } else {
+            selectedSchoolIds.delete(schoolId);
+        }
+
+
+        updateSelectionControls();
+    });
+
+
+    selectVisibleCheckbox.addEventListener(
+        "change",
+        function () {
+            hideSelectionMessage();
+
+
+            if (selectVisibleCheckbox.checked) {
+                var availableSlots =
+                    MAX_SELECTED_SCHOOLS -
+                    selectedSchoolIds.size;
+
+
+                currentPageRows.forEach(function (row) {
+                    var schoolId =
+                        row.dataset.schoolId;
+
+
+                    if (
+                        !selectedSchoolIds.has(schoolId) &&
+                        availableSlots > 0
+                    ) {
+                        selectedSchoolIds.add(schoolId);
+                        availableSlots -= 1;
+                    }
+                });
+
+
+                var unselectedRowsRemain =
+                    currentPageRows.some(function (row) {
+                        return !selectedSchoolIds.has(
+                            row.dataset.schoolId
+                        );
+                    });
+
+
+                if (unselectedRowsRemain) {
+                    showSelectionMessage(
+                        "Only " +
+                        MAX_SELECTED_SCHOOLS +
+                        " schools can be selected at one time."
+                    );
+                }
+            } else {
+                currentPageRows.forEach(function (row) {
+                    selectedSchoolIds.delete(
+                        row.dataset.schoolId
+                    );
+                });
+            }
+
+
+            updateSelectionUI();
+        }
+    );
+
+
+    clearSelectionButton.addEventListener(
+        "click",
+        function () {
+            selectedSchoolIds.clear();
+            hideSelectionMessage();
+            updateSelectionUI();
+        }
+    );
+
+
+    viewRoiButton.addEventListener(
+        "click",
+        function () {
+            if (selectedSchoolIds.size === 0) {
+                showSelectionMessage(
+                    "Select at least one school before viewing ROI analysis."
+                );
+
+                return;
+            }
+
+
+            var params = new URLSearchParams();
+
+
+            selectedSchoolIds.forEach(
+                function (schoolId) {
+                    params.append(
+                        "school_ids",
+                        schoolId
+                    );
+                }
+            );
+
+
+            window.location.href =
+                "{{ url_for('roi_analysis') }}?" +
+                params.toString();
+        }
+    );
+
 
     applyFilters(true);
-
-})();
-
+}());
 </script>
 
 {% endif %}
 
 {% endblock %}
-
+```

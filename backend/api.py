@@ -231,3 +231,43 @@ def search_colleges(
             "acceptance_rate": _number(row["acceptance_rate"]),
         })
     return colleges
+
+def get_colleges_by_ids(school_ids):
+    """
+    Return colleges whose Scorecard IDs were selected on the results page.
+    """
+    if not school_ids:
+        return []
+
+    if not COLLEGES_FILE.exists() or not PROGRAMS_FILE.exists():
+        _build_cache()
+
+    selected_ids = {str(school_id) for school_id in school_ids}
+    colleges = []
+
+    for row in _read_csv(COLLEGES_FILE):
+        if row["id"] not in selected_ids:
+            continue
+
+        colleges.append({
+            "id": row["id"],
+            "name": row["name"],
+            "state": row["state"],
+            "tuition": _number(row["tuition"]),
+            "earnings": _number(row["earnings"]),
+            "debt": _number(row["debt"]),
+            "graduation_rate": _number(row["graduation_rate"]),
+            "acceptance_rate": _number(row["acceptance_rate"]),
+        })
+
+    # Preserve the order in which schools were selected/submitted.
+    college_by_id = {
+        str(college["id"]): college
+        for college in colleges
+    }
+
+    return [
+        college_by_id[school_id]
+        for school_id in map(str, school_ids)
+        if school_id in college_by_id
+    ]
