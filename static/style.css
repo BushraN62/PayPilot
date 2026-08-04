@@ -540,6 +540,172 @@ a {
 }
 
 /* --------------------------------------------------------------------------
+   School selection controls
+   -------------------------------------------------------------------------- */
+
+.pp-compare-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem;
+    border-bottom: 1px solid var(--pp-border-soft);
+    background: rgba(59, 130, 246, 0.04);
+}
+
+.pp-compare-help {
+    margin-top: 0.2rem;
+    color: var(--pp-text-muted);
+    font-size: 0.825rem;
+}
+
+.pp-select-column {
+    width: 52px;
+    min-width: 52px;
+    text-align: center;
+}
+
+.pp-school-checkbox {
+    width: 1.1rem;
+    height: 1.1rem;
+    cursor: pointer;
+    border-color: var(--pp-text-muted);
+}
+
+.pp-school-checkbox:checked {
+    background-color: var(--pp-accent);
+    border-color: var(--pp-accent);
+}
+
+.pp-school-checkbox:focus {
+    border-color: var(--pp-accent);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+/* --------------------------------------------------------------------------
+   ROI analysis
+   -------------------------------------------------------------------------- */
+
+.pp-roi-formula-card,
+.pp-chart-card,
+.pp-ranking-card {
+    background: var(--pp-surface);
+    border: 1px solid var(--pp-border);
+    border-radius: var(--pp-radius-md);
+}
+
+.pp-roi-formula-card {
+    padding: 1.5rem 1.75rem;
+}
+
+.pp-roi-formula {
+    display: block;
+    margin: 1rem 0;
+    padding: 1rem;
+    white-space: normal;
+    color: var(--pp-accent-muted);
+    background: var(--pp-bg-elevated);
+    border: 1px solid var(--pp-border-soft);
+    border-radius: var(--pp-radius-sm);
+    font-size: 0.9rem;
+}
+
+.pp-roi-disclaimer {
+    color: var(--pp-text-muted);
+    font-size: 0.825rem;
+    line-height: 1.6;
+}
+
+.pp-ranking-card {
+    height: 100%;
+    padding: 1.4rem;
+}
+
+.pp-ranking-label {
+    margin-bottom: 0.35rem;
+    color: var(--pp-accent-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.pp-ranking-school {
+    margin-bottom: 0.25rem;
+    color: var(--pp-text);
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.pp-ranking-state {
+    margin-bottom: 0;
+    color: var(--pp-text-muted);
+    font-size: 0.875rem;
+}
+
+.pp-ranking-score {
+    flex-shrink: 0;
+    color: var(--pp-accent-muted);
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.pp-roi-metrics {
+    margin: 1.25rem 0 0;
+}
+
+.pp-roi-metrics > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.65rem 0;
+    border-top: 1px solid var(--pp-border-soft);
+}
+
+.pp-roi-metrics dt {
+    color: var(--pp-text-muted);
+    font-size: 0.82rem;
+    font-weight: 500;
+}
+
+.pp-roi-metrics dd {
+    margin: 0;
+    color: var(--pp-text);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: right;
+}
+
+.pp-chart-card {
+    height: 100%;
+    padding: 1.5rem;
+}
+
+.pp-chart-title {
+    margin-bottom: 0.35rem;
+    color: var(--pp-text);
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.pp-chart-description {
+    margin-bottom: 1.25rem;
+    color: var(--pp-text-muted);
+    font-size: 0.9rem;
+}
+
+.pp-chart-container {
+    position: relative;
+    width: 100%;
+    height: 390px;
+}
+
+.pp-chart-container-wide {
+    height: max(390px, 55vh);
+}
+
+/* --------------------------------------------------------------------------
    Responsive
    -------------------------------------------------------------------------- */
 
@@ -572,5 +738,22 @@ a {
     .pp-table tbody td {
         padding: 0.75rem 1rem;
         font-size: 0.85rem;
+    }
+
+    .pp-compare-toolbar {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .pp-compare-toolbar .btn {
+        flex: 1;
+    }
+
+    .pp-ranking-score {
+        font-size: 1.1rem;
+    }
+
+    .pp-chart-container {
+        height: 320px;
     }
 }

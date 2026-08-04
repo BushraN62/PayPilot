@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request
 
-from backend.api import search_colleges
+
+from backend.analysis import add_roi_data
+from backend.api import get_colleges_by_ids, search_colleges
 
 app = Flask(__name__)
 
@@ -40,6 +42,7 @@ def results():
         max_debt=max_debt,
         max_tuition=max_tuition,
     )
+    colleges = add_roi_data(colleges) 
 
     tuition_values = [
         college["tuition"]
@@ -81,7 +84,62 @@ def results():
         average_earnings=average_earnings,
         average_debt=average_debt,
     )
+@app.route("/roi-analysis")
+def roi_analysis():
+    selected_ids = request.args.getlist("school_ids")
 
+    # Remove duplicates while preserving selection order.
+    selected_ids = list(dict.fromkeys(selected_ids))
+
+    if not selected_ids:
+        return render_template(
+            "roi_analysis.html",
+            colleges=[],
+            chart_data={},
+            error_message="Select at least one school from the results page.",
+        )
+
+    # Prevent an extremely large comparison/chart request.
+    selected_ids = selected_ids[:10]
+
+    colleges = get_colleges_by_ids(selected_ids)
+    colleges = add_roi_data(colleges)
+
+    valid_roi_colleges = [
+        college
+        for college in colleges
+        if college["roi_score"] is not None
+    ]
+
+    chart_data = {
+        "labels": [
+            college["name"]
+            for college in valid_roi_colleges
+        ],
+        "tuition": [
+            college["tuition"] or 0
+            for college in valid_roi_colleges
+        ],
+        "earnings": [
+            college["earnings"] or 0
+            for college in valid_roi_colleges
+        ],
+        "debt": [
+            college["debt"] or 0
+            for college in valid_roi_colleges
+        ],
+        "roi_scores": [
+            college["roi_score"]
+            for college in valid_roi_colleges
+        ],
+    }
+
+    return render_template(
+        "roi_analysis.html",
+        colleges=colleges,
+        chart_data=chart_data,
+        error_message=None,
+    )
 
 if __name__ == "__main__":
     app.run(debug=True)
