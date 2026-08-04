@@ -46,3 +46,65 @@ The application will collect data from the U.S. Department of Education College 
 ### Author #2: Bushra Naveed
 
 The collected data will be analyzed using Python and the Pandas library to compare colleges based on earnings, debt, tuition, and graduation rates. An ROI score will be calculated to estimate the financial value of attending each college. The application will generate visualizations such as bar charts, scatter plots, and histograms using Plotly or Matplotlib to help users compare schools and identify trends in salary outcomes and educational costs. These visualizations will be integrated into the web interface for users to explore.
+
+
+---
+
+## Installation & Setup
+
+### 1. Clone the repository
+
+```bash
+git clone <repository-url>
+cd PayPilot
+```
+
+### 2. (Optional) Create a virtual environment
+
+Windows:
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+```
+
+macOS/Linux:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+### 3. Install the required packages
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Create a `.env` file
+
+In the project root, create a file named `.env` containing your College Scorecard API key:
+
+```text
+COLLEGE_SCORECARD_API_KEY=your_api_key_here
+```
+
+### 5. Run the application
+
+```bash
+python app.py
+```
+
+Then open your browser and go to:
+
+```
+http://127.0.0.1:5000
+```
+
+---
+
+## Notes
+
+- The `.env` file is excluded from Git for security and must be created manually.
+- The `data/` CSV files are generated automatically the first time the application retrieves data from the College Scorecard API.
+- The initial search may take longer while the local data cache is created. Subsequent searches will be significantly faster.
