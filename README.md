@@ -81,15 +81,24 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 4. Create a `.env` file
+### 4. Obtain a College Scorecard API Key
 
-In the project root, create a file named `.env` containing your College Scorecard API key:
+PayPilot requires a U.S. Department of Education College Scorecard API key.
+
+Visit the College Scorecard API documentation:
+
+https://collegescorecard.ed.gov/data/api-documentation/
+
+Follow the instructions to request a free API key through Data.gov.
+
+### 5. Create a `.env` file
+
+In the project root, create a file named `.env` and add your API key:
 
 ```text
 COLLEGE_SCORECARD_API_KEY=your_api_key_here
-```
 
-### 5. Run the application
+### 6. Run the application
 
 ```bash
 python app.py
