@@ -97,6 +97,7 @@ In the project root, create a file named `.env` and add your API key:
 
 ```text
 COLLEGE_SCORECARD_API_KEY=your_api_key_here
+```
 
 ### 6. Run the application
 
