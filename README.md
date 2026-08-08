@@ -2,8 +2,8 @@
 
 ## Authors
 
-- **Zayba Syed** — Implemented the Flask web application, API integration, backend development, data collection, local data storage/caching, search and filtering functionality, application testing, and debugging.
-- **Bushra Naveed** — Implemented data analysis, ROI calculations, college financial comparisons, data visualizations, and integration of analytical results into the application.
+- **Zayba Syed** : Implemented the Flask web application, API integration, backend development, data collection, local data storage/caching, search and filtering functionality, application testing, and debugging.
+- **Bushra Naveed** : Implemented data analysis, ROI calculations, college financial comparisons, data visualizations, and integration of analytical results into the application.
 
 ---
 
