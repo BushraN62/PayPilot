@@ -1,6 +1,4 @@
-```python
 from flask import Flask, render_template, request
-
 from backend.analysis import add_roi_data
 from backend.api import get_colleges_by_ids, search_colleges
 
@@ -156,4 +154,3 @@ def roi_analysis():
 
 if __name__ == "__main__":
     app.run(debug=True)
-```

@@ -1,4 +1,3 @@
-```python
 import csv
 import io
 import os
@@ -361,4 +360,4 @@ def get_colleges_by_ids(school_ids):
         for school_id in map(str, school_ids)
         if school_id in college_by_id
     ]
-```
+

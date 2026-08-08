@@ -1,4 +1,3 @@
-```python
 def calculate_roi(college, years_of_tuition=4, earnings_years=10):
     """
     Calculate an estimated return on investment (ROI) for a college.
@@ -124,4 +123,4 @@ def add_roi_data(colleges):
             college["roi_rank"] = None
 
     return ranked_colleges
-```
+
