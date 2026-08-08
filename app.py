@@ -1,5 +1,5 @@
+```python
 from flask import Flask, render_template, request
-
 
 from backend.analysis import add_roi_data
 from backend.api import get_colleges_by_ids, search_colleges
@@ -9,22 +9,26 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
+    """Render the home page."""
     return render_template("home.html")
 
 
 @app.route("/how-it-works")
 def how_it_works():
+    """Render an overview of how the college search works."""
     return render_template("how_it_works.html")
 
 
 @app.route("/roi")
 def roi():
+    """Render information about the ROI calculation."""
     return render_template("about_roi.html")
 
 
 @app.route("/results")
 def results():
-
+    """Search colleges using URL filters and display the results."""
+    # Read optional search filters from the query string.
     state = request.args.get("state")
     school_type = request.args.get("school_type")
     major = request.args.get("major")
@@ -42,8 +46,11 @@ def results():
         max_debt=max_debt,
         max_tuition=max_tuition,
     )
-    colleges = add_roi_data(colleges) 
 
+    # Add estimated ROI metrics and rankings to the search results.
+    colleges = add_roi_data(colleges)
+
+    # Collect available values for summary statistics.
     tuition_values = [
         college["tuition"]
         for college in colleges
@@ -84,11 +91,14 @@ def results():
         average_earnings=average_earnings,
         average_debt=average_debt,
     )
+
+
 @app.route("/roi-analysis")
 def roi_analysis():
+    """Compare ROI metrics for colleges selected from the results page."""
     selected_ids = request.args.getlist("school_ids")
 
-    # Remove duplicates while preserving selection order.
+    # Remove duplicate IDs while preserving the user's selection order.
     selected_ids = list(dict.fromkeys(selected_ids))
 
     if not selected_ids:
@@ -99,18 +109,20 @@ def roi_analysis():
             error_message="Select at least one school from the results page.",
         )
 
-    # Prevent an extremely large comparison/chart request.
+    # Limit comparisons to keep the chart readable and the request manageable.
     selected_ids = selected_ids[:10]
 
     colleges = get_colleges_by_ids(selected_ids)
     colleges = add_roi_data(colleges)
 
+    # Only colleges with enough data for an ROI estimate are charted.
     valid_roi_colleges = [
         college
         for college in colleges
         if college["roi_score"] is not None
     ]
 
+    # Structure the selected college data for the comparison chart.
     chart_data = {
         "labels": [
             college["name"]
@@ -141,5 +153,7 @@ def roi_analysis():
         error_message=None,
     )
 
+
 if __name__ == "__main__":
     app.run(debug=True)
+```
